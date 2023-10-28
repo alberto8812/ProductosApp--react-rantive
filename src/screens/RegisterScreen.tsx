@@ -13,7 +13,7 @@ interface Props extends StackScreenProps<any,any>{
 
 
 export const RegisterScreen:FC <Props> = ({navigation}) => {
-  const {onChange,name,email,password}=useForm({
+  const {onChange,name,email,password,}=useForm({
     email:'',
     password:'',
     name:'',
@@ -22,7 +22,7 @@ export const RegisterScreen:FC <Props> = ({navigation}) => {
   });
 
   const onRegister=()=>{
-   console.log({email,password,name});
+   //console.log({email,password,name});
    Keyboard.dismiss;
   }
 

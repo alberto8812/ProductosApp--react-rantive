@@ -41,14 +41,26 @@ const signIn=async({correo,password}:LoginData)=>{
         }
         )
         console.log(data)
+
+        dispatch({
+            type:'signUp'
+            ,payload:{
+                token:data.token,
+                user:data.usuario
+            }
+    })
         
-    } catch (error) {
-        console.log({error})
+    } catch (error:any) {
+        const msgError:string=error.response.data.msg;
+        dispatch({type:'addError',payload:msgError || 'Informacion incorrecta'})
+
     }
 
 };
 const removeError=()=>{
-
+    dispatch({
+        type:'removeError'
+    })
 };
 const logout=()=>{
 

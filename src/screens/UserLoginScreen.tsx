@@ -1,5 +1,5 @@
-import React, { FC, useContext } from 'react'
-import { Text, TextInput, View,Platform, KeyboardAvoidingView,Keyboard } from 'react-native'
+import React, { FC, useContext, useEffect } from 'react'
+import { Text, TextInput, View,Platform, KeyboardAvoidingView,Keyboard, Alert } from 'react-native'
 import { BackGround, WhiteLogo } from '../components'
 import { loginStyle } from '../theme/loginTheme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -12,11 +12,24 @@ interface Props extends StackScreenProps<any,any>{
 }
 
 export const UserLoginScreen:FC <Props> = ({navigation}) => {
-  const {signIn} = useContext(AuthContext)
+  const {signIn,errorMessage,removeError} = useContext(AuthContext)
+
   const {onChange,form,email,password}=useForm({
     email:'',
     password:''
   });
+
+  useEffect(() => {
+    if(errorMessage.length==0) return;
+     Alert.alert('Login incorrecto',errorMessage,
+     [
+      {
+        text:'Ok',
+        onPress:()=>removeError()
+      }
+    ]);
+  }, [errorMessage])
+  
 
   const onLogin=()=>{
 

@@ -1,24 +1,28 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { Text, TextInput, View,Platform, KeyboardAvoidingView,Keyboard } from 'react-native'
 import { BackGround, WhiteLogo } from '../components'
 import { loginStyle } from '../theme/loginTheme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useForm } from '../hook'
 import { StackScreenProps } from '@react-navigation/stack'
+import { AuthContext } from '../context/authcontext/AuthContext'
  
 interface Props extends StackScreenProps<any,any>{
 
 }
 
 export const UserLoginScreen:FC <Props> = ({navigation}) => {
+  const {signIn} = useContext(AuthContext)
   const {onChange,form,email,password}=useForm({
     email:'',
     password:''
   });
 
   const onLogin=()=>{
+
    console.log({email,password});
    Keyboard.dismiss;
+   signIn({correo:email,password})
   }
 
 

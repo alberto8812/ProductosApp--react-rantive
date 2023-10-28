@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Text, TextInput, View,Platform, KeyboardAvoidingView,Keyboard } from 'react-native'
 import { BackGround, WhiteLogo } from '../components'
-import { loginStyle } from '../interface/loginTheme'
+import { loginStyle } from '../theme/loginTheme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useForm } from '../hook'
 import { StackScreenProps } from '@react-navigation/stack'

@@ -6,7 +6,7 @@ import motoApi from "../../api/MotosApi";
 type ProductsContextProps={
     products:Producto[],
     loadProduct:()=>Promise<void>,
-    addProduct:(categoryId:string,productName:string)=>Promise<void>,
+    addProduct:(categoryId:string,productName:string)=>Promise<Producto>,
     updateProduct:(categoryId:string,productName:string,productId:string)=>Promise<void>,
     DeleteProduct:(id:string)=>Promise<void>,
     loadProductById:(id:string)=>Promise<Producto>,
@@ -29,24 +29,59 @@ export const ProductProvider=({children}:{children:JSX.Element|JSX.Element[]})=>
         try {
             const {data}=await motoApi.get<ProductData>('/productos?limite=50');
             //setProducts([...products,...data.productos])//para cuando viene paginado
-            setProducts([...data.productos])
+           setProducts([...data.productos])
+
         } catch (error) {
             console.log(error)
         }
 
     };
-    const  addProduct = async (categoryId:string,productName:string)=>{
+    const  addProduct = async (categoryId:string,productName:string):Promise <Producto>=>{
+        try {
+            const {data}=await motoApi.post<Producto>('/productos',{
+                nombre:productName,
+                categoria:categoryId
+            });
+            //setProducts([...products,...data.productos])//para cuando viene paginado
+           // console.log(data)
+            setProducts([...products,data])
+            return data
+        } catch (error:any) {
+            throw new Error(error)
+        }
 
     };
-    const  updateProduct = async (categoryId:string,productName:string,productId:string)=>{
+    const  updateProduct = async (categoryId:string,productName:string,productId:string):Promise<void>=>{
+        try {
+            console.log(productId)
+            const {data}=await motoApi.put<Producto>(`/productos/${productId}`,{
+                nombre:productName,
+                categoria:categoryId
+            });
+            //setProducts([...products,...data.productos])//para cuando viene paginado
+            setProducts(products.map(producto=>(data._id===productId)?data:producto));
+            console.log('carlos')
+
+        } catch (error:any) {
+            console.log(error)
+        }
+
 
     };
     const  DeleteProduct = async (id:string)=>{
 
     };
-    const  loadProductById = async (id:string)=>{
+    const  loadProductById = async (id:string):Promise<Producto>=>{
 
-        throw new Error('no implement');
+       try {
+        const {data}=await motoApi.get<Producto>(`/productos/${id}`);
+
+        return data;
+       } catch (error:any) {
+            throw new Error(error)
+       }
+
+
 
     };
     const  uploadImage = async (data:any,id:string)=>{

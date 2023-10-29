@@ -5,6 +5,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { HomeScreen, LoadingScreen, RegisterScreen, UserLoginScreen } from '../screens';
+import { ProductNavigation } from './ProductNavigation';
+
 
 const Stack=createStackNavigator();
 
@@ -14,8 +16,7 @@ export const StackNavigator = () => {
   if(status=='checking') return <LoadingScreen/>
   
   return (
-    <NavigationContainer
-     
+    <NavigationContainer  
     >
          <Stack.Navigator
            screenOptions={{
@@ -35,9 +36,15 @@ export const StackNavigator = () => {
                 </>
               )
               :
-              ( <Stack.Screen name='HomeScreen' component={HomeScreen} />)
+              ( 
+               <>
+                <Stack.Screen name='ProductNavigation' component={ProductNavigation} />
+                <Stack.Screen name='HomeScreen' component={HomeScreen} />
+              </>
+                )
             }         
          </Stack.Navigator>
     </NavigationContainer>
   )
 }
+

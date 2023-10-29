@@ -1,5 +1,5 @@
 import React, { Children, createContext, useEffect, useReducer } from "react";
-import { LoginData, Usuario, UsurioLogin } from "../../interface/usuarioLogin";
+import { ErrorCreateUsers, LoginData, RegisterData, Usuario, UsurioLogin } from "../../interface/usuarioLogin";
 import { AuthState, authReducer } from "../reducer/authReducer";
 import motoApi from "../../api/MotosApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -9,7 +9,7 @@ type AuthContextProps={
     token:string|null;
     user:Usuario | null;
     status:'checking' | 'authenticated' | 'not-authenticated';
-    signUp:()=>void;
+    signUp:({nombre,password,correo}:RegisterData)=>void;
     signIn:({correo,password}:LoginData)=>void;
     removeError:()=>void;
     logout:()=>void;
@@ -51,8 +51,22 @@ const checkToken=async ()=>{
 };
 
 
-const signUp=  ()=>{
+const signUp= async ({nombre,password,correo}:RegisterData)=>{
 
+    try {
+        const {data}=await motoApi.post<UsurioLogin>('/usuarios',
+        {
+            nombre,
+            password,
+            correo
+        });
+        console.log(data)
+        dispatch({type:'signUp',payload:{user:data.usuario,token:data.token}})
+
+    } catch (error:any) {
+        const msgError:ErrorCreateUsers=error.response.data;
+        dispatch({type:'addError',payload:msgError.errors[0].msg || 'Informacion incorrecta'})
+    }
 
 };
 const signIn=async({correo,password}:LoginData)=>{

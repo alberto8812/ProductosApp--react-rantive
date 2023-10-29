@@ -34,7 +34,6 @@ export const UserLoginScreen:FC <Props> = ({navigation}) => {
 
   const onLogin=()=>{
 
-   console.log({email,password});
    Keyboard.dismiss;
    signIn({correo:email,password})
   }

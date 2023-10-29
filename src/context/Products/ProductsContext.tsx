@@ -1,5 +1,6 @@
-import {  createContext, useState } from "react";
-import { Producto } from "../../interface/usuarioLogin";
+import {  createContext, useEffect, useState } from "react";
+import { ProductData, Producto } from "../../interface/usuarioLogin";
+import motoApi from "../../api/MotosApi";
 
 
 type ProductsContextProps={
@@ -17,8 +18,21 @@ export const productContext=createContext({} as ProductsContextProps);
 export const ProductProvider=({children}:{children:JSX.Element|JSX.Element[]})=>{
     const [products, setProducts] = useState<Producto[]>([]);
 
+    useEffect(() => {
+        loadProduct();
+    }, [])
+    
+
 
     const  loadProduct = async ()=>{
+    
+        try {
+            const {data}=await motoApi.get<ProductData>('/productos?limite=50');
+            //setProducts([...products,...data.productos])//para cuando viene paginado
+            setProducts([...data.productos])
+        } catch (error) {
+            console.log(error)
+        }
 
     };
     const  addProduct = async (categoryId:string,productName:string)=>{

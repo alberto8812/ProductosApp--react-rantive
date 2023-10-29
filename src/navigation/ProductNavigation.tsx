@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { StackScreenProps, createStackNavigator } from '@react-navigation/stack';
 import React from 'react'
 import { View } from 'react-native'
 import { PorductScreen, ProductsScreen } from '../screens';

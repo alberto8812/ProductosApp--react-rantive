@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useForm } from '../hook'
 import { StackScreenProps } from '@react-navigation/stack'
 import { AuthContext } from '../context/authcontext/AuthContext'
+import AsyncStorage from '@react-native-async-storage/async-storage';
  
 interface Props extends StackScreenProps<any,any>{
 

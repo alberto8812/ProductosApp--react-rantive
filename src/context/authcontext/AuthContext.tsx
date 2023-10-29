@@ -37,6 +37,17 @@ const checkToken=async ()=>{
     
     const token =await AsyncStorage.getItem('token');
     if(!token)  return dispatch({type:'notAuthenticated'});
+
+    const {data}=await motoApi.get<UsurioLogin>('/auth');
+
+    dispatch({
+        type:'signUp',
+        payload:{
+            user:data.usuario,
+            token:data.token
+        }
+    })
+
 };
 
 
@@ -76,7 +87,12 @@ const removeError=()=>{
         type:'removeError'
     })
 };
-const logout=()=>{
+const logout=async()=>{
+    await AsyncStorage.removeItem('token')
+    dispatch({type:'logUot'})
+
+
+
 
 };
 

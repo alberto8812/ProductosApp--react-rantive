@@ -4,14 +4,14 @@ import { AuthContext } from '../context/authcontext/AuthContext';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { HomeScreen, RegisterScreen, UserLoginScreen } from '../screens';
+import { HomeScreen, LoadingScreen, RegisterScreen, UserLoginScreen } from '../screens';
 
 const Stack=createStackNavigator();
 
 export const StackNavigator = () => {
   const {status}=useContext(AuthContext)
 
-
+  if(status=='checking') return <LoadingScreen/>
   
   return (
     <NavigationContainer

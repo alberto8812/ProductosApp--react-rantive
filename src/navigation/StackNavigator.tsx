@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { HomeScreen, LoadingScreen, RegisterScreen, UserLoginScreen } from '../screens';
 
+
 const Stack=createStackNavigator();
 
 export const StackNavigator = () => {
@@ -14,8 +15,7 @@ export const StackNavigator = () => {
   if(status=='checking') return <LoadingScreen/>
   
   return (
-    <NavigationContainer
-     
+    <NavigationContainer  
     >
          <Stack.Navigator
            screenOptions={{
@@ -41,3 +41,4 @@ export const StackNavigator = () => {
     </NavigationContainer>
   )
 }
+

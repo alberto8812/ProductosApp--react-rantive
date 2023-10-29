@@ -1,18 +1,22 @@
 import 'react-native-gesture-handler';
-import React, { JSXElementConstructor } from 'react'
+import React from 'react'
 import { StackNavigator } from './src/navigation/StackNavigator';
-import { AuthProvider } from './src/context';
+import { AuthProvider, ProductProvider } from './src/context';
 
 
 export const App = () => {
   return (
  <>
     <AuthProvider>
-       <StackNavigator/>
+       <ProductProvider>
+          <StackNavigator/>
+       </ProductProvider>
     </AuthProvider>
  </>
 
   )
 }
+
+
 
 export default App;

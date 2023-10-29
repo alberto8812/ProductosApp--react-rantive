@@ -17,4 +17,5 @@ npm start
 # OR using Yarn
 yarn start
 ```
-![image](https://github.com/alberto8812/ProductosApp--react-rantive/assets/101751073/3a020c42-c385-446a-a272-3e67f1aa2ee5)
+![image](https://github.com/alberto8812/ProductosApp--react-rantive/assets/101751073/ee77fbc9-1701-4242-a22a-67962f80812b)
+

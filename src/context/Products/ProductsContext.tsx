@@ -53,14 +53,14 @@ export const ProductProvider=({children}:{children:JSX.Element|JSX.Element[]})=>
     };
     const  updateProduct = async (categoryId:string,productName:string,productId:string):Promise<void>=>{
         try {
-            console.log(productId)
+     
             const {data}=await motoApi.put<Producto>(`/productos/${productId}`,{
                 nombre:productName,
                 categoria:categoryId
             });
             //setProducts([...products,...data.productos])//para cuando viene paginado
             setProducts(products.map(producto=>(data._id===productId)?data:producto));
-            console.log('carlos')
+
 
         } catch (error:any) {
             console.log(error)

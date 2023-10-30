@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack'
-import React, { FC, useContext, useEffect } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import { StyleSheet, Text, View,ScrollView, TextInput, TouchableOpacity, Image } from 'react-native'
 import { ProductsStack } from '../navigation/ProductNavigation'
 import { BackGround } from '../components'
@@ -7,6 +7,7 @@ import {Picker} from '@react-native-picker/picker';
 import { useCategory, useForm } from '../hook'
 import { productContext } from '../context/Products/ProductsContext'
 import { Producto } from '../interface/usuarioLogin'
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 
 
@@ -20,6 +21,7 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
 
   const {Categories}=useCategory();
   const {loadProductById,addProduct,updateProduct,products}=useContext(productContext);
+  const [tempUri, setTempUri] = useState<string>()
   const {_id,nombre,categoriaId,img,form,onChange,setFormValue}=useForm({
     _id:id,
     categoriaId:'',
@@ -69,6 +71,21 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
 
      const newProduct= await addProduct(tempsCategoriaId,nombre);
      onChange(newProduct._id,'_id')
+  }
+
+
+  const  takePictore=()=>{
+    launchCamera({
+      mediaType:'photo',
+      quality:0.5
+    },(resp)=>{
+      if(resp.didCancel)return;
+      const uri =resp.assets?.map(data=>data.uri);
+      if(!uri) return;
+      
+      setTempUri(uri[0] as any)
+      console.log(tempUri)
+    })
   }
 
   return (
@@ -122,7 +139,7 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
                     <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.Button}
-                    onPress={()=>{}}
+                    onPress={takePictore}
 
                     >
                       <Text style={styles.buttonText}>Camara</Text>
@@ -141,10 +158,23 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
             </View>
            }
          {
-         ( form.img.length>0)
+         ( form.img.length>0 && !tempUri)
          &&
          <Image
           source={{uri:form.img}}
+          style={{
+            width:'100%',
+            height:300,
+            borderRadius:100
+          }}
+         />
+         }
+         {
+         
+         (tempUri)
+         &&
+         <Image
+          source={{uri:tempUri}}
           style={{
             width:'100%',
             height:300,

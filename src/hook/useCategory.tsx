@@ -15,8 +15,7 @@ export const useCategory = () => {
 
  }  
 
-    useEffect(() => {
-        
+    useEffect(() => {      
         getAllCtegories();
     }, [])
 

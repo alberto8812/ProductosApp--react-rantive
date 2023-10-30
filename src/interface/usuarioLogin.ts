@@ -47,7 +47,7 @@ export interface ProductData {
 }
 
 export interface Producto {
-    precio:    number;
+    precio?:    number;
     _id:       string;
     nombre:    string;
     categoria: Categoria;

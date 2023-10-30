@@ -1,10 +1,13 @@
 import { StackScreenProps } from '@react-navigation/stack'
-import React, { FC, useEffect, useState } from 'react'
-import { StyleSheet, Text, View,ScrollView, TextInput, TouchableOpacity } from 'react-native'
+import React, { FC, useContext, useEffect, useState } from 'react'
+import { StyleSheet, Text, View,ScrollView, TextInput, TouchableOpacity, Image } from 'react-native'
 import { ProductsStack } from '../navigation/ProductNavigation'
 import { BackGround } from '../components'
 import {Picker} from '@react-native-picker/picker';
-import { useCategory } from '../hook'
+import { useCategory, useForm } from '../hook'
+import { productContext } from '../context/Products/ProductsContext'
+import { Producto } from '../interface/usuarioLogin'
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 
 
@@ -14,22 +17,76 @@ interface Props extends StackScreenProps <ProductsStack,'PorductScreen' | 'Produ
 
 
 export const PorductScreen:FC <Props> = ({navigation,route}) => {
+  const {id,name}=route.params;
 
-  const {id,name=''}=route.params;
-  const [selectedLanguage, setSelectedLanguage] = useState();
   const {Categories}=useCategory();
+  const {loadProductById,addProduct,updateProduct,products}=useContext(productContext);
+  const [tempUri, setTempUri] = useState<string>()
+  const {_id,nombre,categoriaId,img,form,onChange,setFormValue}=useForm({
+    _id:id,
+    categoriaId:'',
+    nombre:name,
+    img:''
+  })
 
 
 
   useEffect(() => {
      navigation.setOptions({
-      headerTitle:(name)?name:'Nuevo producto',
+      title:(name)?name:'Nuevo producto',
       headerTitleAlign:'center',
 
      })
      
+  }, [nombre])
+
+
+  useEffect(() => {
+    console.log(2)
+    loadProduct();
   }, [])
   
+
+
+  const loadProduct=async()=>{
+    if(id.length===0) return;
+    const product:Producto=await loadProductById(id)
+    setFormValue({
+      _id:id,
+      categoriaId:product.categoria._id,
+      img:product.img || '',
+      nombre:nombre
+    })
+  }
+  
+
+  const saveOrUpdate= async()=>{
+    if(id.length>0){
+ 
+       await updateProduct(categoriaId,nombre,id);
+
+    return;
+    }
+    const tempsCategoriaId=categoriaId ||Categories[0]._id
+
+     const newProduct= await addProduct(tempsCategoriaId,nombre);
+     onChange(newProduct._id,'_id')
+  }
+
+
+  const  takePictore=()=>{
+    launchCamera({
+      mediaType:'photo',
+      quality:0.5
+    },(resp)=>{
+      if(resp.didCancel)return;
+      const uri =resp.assets?.map(data=>data.uri);
+      if(!uri) return;
+      
+      setTempUri(uri[0] as any)
+      console.log(tempUri)
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -43,20 +100,20 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
           placeholder='Producto'
           placeholderTextColor="rgba(255,255,255,0.4)"
           selectionColor='white'
+          value={nombre}
+          onChangeText={(value)=>onChange(value,'nombre')}
         
           />
 
           <Text style={styles.label}>Seleccionar categoria: </Text>
 
           <Picker
-            selectedValue={selectedLanguage}
+            selectedValue={categoriaId}
             style={{
               backgroundColor:'white',
               borderRadius:100
             }}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
+            onValueChange={(itemValue) => onChange(itemValue,'categoriaId')}>
               {
                 Categories.map((data)=>(
                   <Picker.Item label={data.nombre} value={data._id} key={data._id} />
@@ -68,35 +125,63 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
                 <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.Button}
-                onPress={()=>{}}
+                onPress={saveOrUpdate}
 
                 >
                   <Text style={styles.buttonText}>Guardar</Text>
                 </TouchableOpacity> 
             </View>
+           {
+            (_id.length>0) 
+            &&
+              <View style={{flexDirection:'row',justifyContent:'center',marginTop:10,padding:5}}>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.Button}
+                    onPress={takePictore}
 
-          <View style={{flexDirection:'row',justifyContent:'center',marginTop:10,padding:5}}>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.Button}
-                onPress={()=>{}}
+                    >
+                      <Text style={styles.buttonText}>Camara</Text>
+                    </TouchableOpacity> 
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.Button}
+                    onPress={()=>{}}
 
-                >
-                  <Text style={styles.buttonText}>Camara</Text>
-                </TouchableOpacity> 
+                    >
+                      <Text style={styles.buttonText}>Galeria</Text>
+                    </TouchableOpacity> 
+                </View>
             </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.Button}
-                onPress={()=>{}}
-
-                >
-                  <Text style={styles.buttonText}>Galeria</Text>
-                </TouchableOpacity> 
-            </View>
-         </View>
+           }
+         {
+         ( form.img.length>0 && !tempUri)
+         &&
+         <Image
+          source={{uri:form.img}}
+          style={{
+            width:'100%',
+            height:300,
+            borderRadius:100
+          }}
+         />
+         }
+         {
+         
+         (tempUri)
+         &&
+         <Image
+          source={{uri:tempUri}}
+          style={{
+            width:'100%',
+            height:300,
+            borderRadius:100
+          }}
+         />
+         }
       </ScrollView>
     </View>
   )

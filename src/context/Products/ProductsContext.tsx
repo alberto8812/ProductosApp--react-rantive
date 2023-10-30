@@ -1,6 +1,7 @@
 import {  createContext, useEffect, useState } from "react";
 import { ProductData, Producto } from "../../interface/usuarioLogin";
 import motoApi from "../../api/MotosApi";
+import { Asset, ImagePickerResponse } from "react-native-image-picker";
 
 
 type ProductsContextProps={
@@ -84,7 +85,24 @@ export const ProductProvider=({children}:{children:JSX.Element|JSX.Element[]})=>
 
 
     };
-    const  uploadImage = async (data:any,id:string)=>{
+    const  uploadImage = async (data: Asset,id:string):Promise<void>=>{
+        
+        const fileToUpload = {
+            uri: data.uri,
+            type: data.type,
+            name: data.fileName
+        }
+
+        const formData = new FormData();
+        formData.append('archivo', fileToUpload);
+
+        try {
+            
+            const resp = await motoApi.put(`/uploads/productos/${ id }`, formData )
+            console.log(resp);
+        } catch (error) {
+            console.log({ error })
+        }
 
     };
     

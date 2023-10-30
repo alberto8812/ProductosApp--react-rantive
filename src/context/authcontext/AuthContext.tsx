@@ -60,7 +60,7 @@ const signUp= async ({nombre,password,correo}:RegisterData)=>{
             password,
             correo
         });
-        console.log(data)
+
         dispatch({type:'signUp',payload:{user:data.usuario,token:data.token}})
 
     } catch (error:any) {

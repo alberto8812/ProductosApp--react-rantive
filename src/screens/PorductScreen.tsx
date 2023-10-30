@@ -20,7 +20,7 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
   const {id,name}=route.params;
 
   const {Categories}=useCategory();
-  const {loadProductById,addProduct,updateProduct,products}=useContext(productContext);
+  const {loadProductById,addProduct,updateProduct,products,uploadImage}=useContext(productContext);
   const [tempUri, setTempUri] = useState<string>()
   const {_id,nombre,categoriaId,img,form,onChange,setFormValue}=useForm({
     _id:id,
@@ -42,7 +42,7 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
 
 
   useEffect(() => {
-    console.log(2)
+   
     loadProduct();
   }, [])
   
@@ -83,8 +83,24 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
       const uri =resp.assets?.map(data=>data.uri);
       if(!uri) return;
       
-      setTempUri(uri[0] as any)
-      console.log(tempUri)
+      setTempUri(uri[0] as any);
+
+      uploadImage(resp.assets,_id);
+    })
+  }
+
+  const takePhotFromGallery=()=>{
+    launchImageLibrary({
+      mediaType:'photo',
+      quality:0.5
+    },(resp)=>{
+      if(resp.didCancel)return;
+      const uri =resp.assets?.map(data=>data.uri);
+      if(!uri) return;
+      
+      setTempUri(uri[0] as any);
+
+      uploadImage(resp.assets,_id);
     })
   }
 
@@ -149,7 +165,7 @@ export const PorductScreen:FC <Props> = ({navigation,route}) => {
                     <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.Button}
-                    onPress={()=>{}}
+                    onPress={takePhotFromGallery}
 
                     >
                       <Text style={styles.buttonText}>Galeria</Text>

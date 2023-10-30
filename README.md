@@ -18,4 +18,6 @@ npm start
 yarn start
 ```
 ![image](https://github.com/alberto8812/ProductosApp--react-rantive/assets/101751073/ee77fbc9-1701-4242-a22a-67962f80812b)
+![image](https://github.com/alberto8812/ProductosApp--react-rantive/assets/101751073/fb26298c-50e0-4e89-94e9-245d7d196a7c)
+
 
